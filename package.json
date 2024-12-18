@@ -1,0 +1,121 @@
+{
+  "name": "per-form",
+  "version": "0.0.0",
+  "description": "Performant, flexible and extensible forms library for React Hooks using Legend State",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "source": "src/index.ts",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "dist/__tests__"
+  ],
+  "exports": {
+    "./package.json": "./package.json",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "react-server": "./dist/react-server.esm.mjs",
+      "import": "./dist/index.esm.mjs",
+      "require": "./dist/index.cjs.js"
+    }
+  },
+  "repository": "https://github.com/geetesh911/per-form.git",
+  "keywords": [
+    "form",
+    "react",
+    "npm",
+    "library",
+    "hooks",
+    "form",
+    "forms",
+    "form-validation",
+    "validation",
+    "typescript",
+    "react-hooks",
+    "legend-state"
+  ],
+  "author": "Geetesh <geetesh911@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/geetesh911/per-form/issues"
+  },
+  "homepage": "https://github.com/geetesh911/per-form#readme",
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "postinstall": "simple-git-hooks",
+    "commit": "czg",
+    "format": "prettier --config .prettierrc --write \"**/*.{js,ts,tsx,css}\"",
+    "lint": "eslint '**/*.{js,ts,tsx}'",
+    "lint:fix": "pnpm lint --fix",
+    "test": "vitest",
+    "test:type": "tsd src/__typetest__",
+    "build:tsup": "tsup src/index.ts --format cjs,esm --dts --clean --sourcemap && attw -P .",
+    "build": "pnpm build:modern",
+    "build:watch": "pnpm build:modern -w",
+    "postbuild": "rimraf dist/__tests__ && node ./scripts/rollup/assert-esm-exports.mjs && node ./scripts/rollup/assert-cjs-exports.cjs",
+    "build:modern": "rollup --bundleConfigAsCjs -c ./scripts/rollup/rollup.config.js",
+    "build:esm": "rollup --bundleConfigAsCjs -c ./scripts/rollup/rollup.esm.config.js",
+    "version": "changeset version",
+    "release": "changeset publish"
+  },
+  "devDependencies": {
+    "@arethetypeswrong/cli": "^0.16.2",
+    "@changesets/changelog-github": "0.5.0",
+    "@changesets/cli": "^2.27.7",
+    "@commitlint/cli": "19.4.1",
+    "@commitlint/config-conventional": "19.5.0",
+    "@eslint/compat": "1.2.4",
+    "@eslint/js": "^9.6.0",
+    "@legendapp/state": "3.0.0-beta.19",
+    "@microsoft/api-extractor": "7.48.1",
+    "@rollup/plugin-commonjs": "28.0.1",
+    "@rollup/plugin-node-resolve": "15.3.0",
+    "@rollup/plugin-terser": "0.4.4",
+    "@testing-library/jest-dom": "6.6.3",
+    "@testing-library/react": "16.1.0",
+    "@testing-library/react-hooks": "8.0.1",
+    "@types/eslint": "^9.6.1",
+    "@types/node": "^22.8.7",
+    "@types/react": "18",
+    "@types/react-dom": "18",
+    "@vitest/coverage-v8": "^2.0.2",
+    "cz-git": "1.10.1",
+    "czg": "1.10.1",
+    "eslint": "9.17.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-compat": "^6.0.0",
+    "eslint-plugin-cypress": "4.1.0",
+    "eslint-plugin-prettier": "5.2.1",
+    "eslint-plugin-react": "7.37.2",
+    "eslint-plugin-react-hooks": "5.1.0",
+    "eslint-plugin-simple-import-sort": "12.1.1",
+    "jsdom": "25.0.1",
+    "prettier": "3.4.2",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "rimraf": "6.0.1",
+    "rollup": "4.28.1",
+    "rollup-plugin-typescript2": "0.36.0",
+    "simple-git-hooks": "^2.11.1",
+    "tsd": "0.31.2",
+    "tsup": "^8.2.4",
+    "type-fest": "4.30.1",
+    "typescript-eslint": "^8.3.0",
+    "vitest": "^2.0.2"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "pnpm run format",
+    "pre-push": "pnpm run lint",
+    "commit-msg": "npx --no -- commitlint --edit \"$1\""
+  },
+  "config": {
+    "commitizen": {
+      "path": "node_modules/cz-git"
+    }
+  },
+  "peerDependencies": {
+    "@legendapp/state": "^3",
+    "react": "^16.8.0 || ^17 || ^18 || ^19"
+  }
+}

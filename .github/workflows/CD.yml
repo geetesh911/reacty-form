@@ -1,0 +1,42 @@
+name: CD
+on:
+  workflow_run:
+    workflows: [CI]
+    branches: [main]
+    types: [completed]
+
+concurrency: ${{ github.workflow }}-${{ github.ref }}
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  release:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: latest
+      - uses: actions/setup-node@v4
+        with:
+          node-version: latest
+          cache: 'pnpm'
+
+      - name: Build library
+        run: pnpm install && pnpm build
+
+      - name: Create Release Pull Request or Publish to npm
+        id: changesets
+        uses: changesets/action@v1
+        with:
+          publish: pnpm release
+          version: npm run version
+          commit: "chore: new release"
+          title: "chore: new release candidate"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}

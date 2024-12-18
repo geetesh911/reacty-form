@@ -1,0 +1,16 @@
+# Test
+coverage
+
+# Build
+dist
+tsconfig.tsbuildinfo
+
+# Dependency
+node_modules
+
+# Environment
+.env
+
+# System
+.DS_Store
+ 
