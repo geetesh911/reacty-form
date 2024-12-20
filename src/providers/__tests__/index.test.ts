@@ -10,8 +10,4 @@ describe('hooks index', () => {
     it('should re-export FormContext', () => {
         expect(Providers.FormContext).toBeDefined();
     });
-
-    it('should re-export useFormContext', () => {
-        expect(Providers.useFormContext).toBeDefined();
-    });
 });

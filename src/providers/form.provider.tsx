@@ -1,8 +1,7 @@
-import React from 'react';
-import { createContext, useContext } from 'react';
+import React, { createContext } from 'react';
 
 import type { useForm } from '../hooks/use-form.hook';
-import type { FieldValues, UseFormReturn } from '../types';
+import type { FieldValues } from '../types';
 
 export const FormContext = createContext<ReturnType<typeof useForm> | null>(null);
 
@@ -21,17 +20,4 @@ export function FormProvider<
             {children}
         </FormContext.Provider>
     );
-}
-
-export function useFormContext<
-    TFieldValues extends FieldValues,
-    TTransformedValues extends FieldValues | undefined = undefined,
->(): UseFormReturn<TFieldValues, TTransformedValues> {
-    const formContext = useContext(FormContext);
-
-    if (!formContext) {
-        throw new Error('useFormContext must be used within a FormProvider');
-    }
-
-    return formContext as unknown as ReturnType<typeof useForm<TFieldValues, TTransformedValues>>;
 }

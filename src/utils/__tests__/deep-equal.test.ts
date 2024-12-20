@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import deepEqual from '../deep-equal';
+import { deepEqual } from '../deep-equal';
 
 describe('deepEqual', () => {
     it('should return false when two sets not match', () => {

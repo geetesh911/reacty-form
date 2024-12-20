@@ -1,13 +1,9 @@
 import type { ObserveEventCallback } from '@legendapp/state';
 import { useObserve } from '@legendapp/state/react';
 
-import { useFormContext } from '../providers/form.provider';
-import type { FieldPath, FieldValues, UseFormReturn } from '../types';
+import type { FieldPath, FieldValues, UseWatchProps } from '../types';
 
-export type UseWatchProps<TFieldValues extends FieldValues = FieldValues> = {
-    name?: FieldPath<TFieldValues> | FieldPath<TFieldValues>[] | readonly FieldPath<TFieldValues>[];
-    form?: UseFormReturn<TFieldValues>;
-};
+import { useFormContext } from './use-form-context.hook';
 
 export function useWatch<TFieldValues extends FieldValues>(
     props: UseWatchProps<TFieldValues>,

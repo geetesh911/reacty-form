@@ -3,8 +3,8 @@ import { useObserve } from '@legendapp/state/react';
 import { cleanup, renderHook } from '@testing-library/react-hooks';
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 
-import { useFormContext } from '../../providers/form.provider';
 import type { FieldValues, UseFormReturn } from '../../types';
+import { useFormContext } from '../use-form-context.hook';
 import { useWatch } from '../use-watch.hook';
 
 // Mock dependencies
@@ -16,7 +16,7 @@ vi.mock('@legendapp/state/react', () => ({
         dirtyFields: observable({}),
     }),
 }));
-vi.mock('../../providers/form.provider', () => ({
+vi.mock('../use-form-context.hook', () => ({
     useFormContext: vi.fn(),
 }));
 

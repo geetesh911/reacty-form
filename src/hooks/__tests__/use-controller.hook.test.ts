@@ -2,13 +2,13 @@ import { act, renderHook } from '@testing-library/react';
 import { beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 
 import { getEventValue } from '../../logic/get-event-value';
-import { useFormContext } from '../../providers';
 import { useController } from '../use-controller.hook';
 import { useForm } from '../use-form.hook';
+import { useFormContext } from '../use-form-context.hook';
 
 import { getMockForm } from './mock-form';
 
-vi.mock('../../providers/form.provider', () => ({
+vi.mock('../use-form-context.hook', () => ({
     useFormContext: vi.fn(),
 }));
 vi.mock('../../logic/get-event-value', () => ({
@@ -44,8 +44,8 @@ describe('useController', () => {
     it('should return correct initial values', () => {
         const { controllerResult } = setup();
 
-        expect(controllerResult.current.name).toBe('test');
-        expect(controllerResult.current.disabled).toBe(false);
+        expect(controllerResult.current.field.name).toBe('test');
+        expect(controllerResult.current.field.disabled).toBe(false);
     });
 
     it('should call setValue on onChange', () => {
@@ -55,7 +55,7 @@ describe('useController', () => {
         (getEventValue as Mock).mockReturnValue('new value');
 
         act(() => {
-            controllerResult.current.onChange(event);
+            controllerResult.current.field.onChange(event);
         });
 
         expect(formResult.current.getValues('test')).toBe('new value');
@@ -69,7 +69,7 @@ describe('useController', () => {
         const spy = vi.spyOn(formResult.current.control, '_executeSchemaAndUpdateState');
 
         await act(async () => {
-            controllerResult.current.onChange({ target: { value: 'new value' } });
+            controllerResult.current.field.onChange({ target: { value: 'new value' } });
         });
 
         expect(spy).toHaveBeenCalled();
@@ -83,7 +83,7 @@ describe('useController', () => {
         const spy = vi.spyOn(formResult.current.control, '_executeSchemaAndUpdateState');
 
         await act(async () => {
-            controllerResult.current.onBlur();
+            controllerResult.current.field.onBlur();
         });
 
         expect(spy).toHaveBeenCalled();
@@ -98,7 +98,7 @@ describe('useController', () => {
         const spy = vi.spyOn(formResult.current.control, '_executeSchemaAndUpdateState');
 
         await act(async () => {
-            controllerResult.current.onBlur();
+            controllerResult.current.field.onBlur();
         });
 
         expect(spy).toHaveBeenCalled();
@@ -108,7 +108,7 @@ describe('useController', () => {
         const { formResult, controllerResult } = setup();
 
         await act(async () => {
-            controllerResult.current.onBlur();
+            controllerResult.current.field.onBlur();
         });
 
         expect(formResult.current.formState$.touchedFields.test.get()).toBe(true);
@@ -137,7 +137,7 @@ describe('useController', () => {
         (getEventValue as Mock).mockReturnValue('new value');
 
         act(() => {
-            controllerResult.current.onChange(event);
+            controllerResult.current.field.onChange(event);
         });
 
         expect(formatValue).toHaveBeenCalledWith('new value');
@@ -147,7 +147,7 @@ describe('useController', () => {
     it('should disable the field if form is submitting', async () => {
         const { formResult, controllerResult } = setup();
         await formResult.current.handleSubmit(() =>
-            expect(controllerResult.current.disabled).toBe(true),
+            expect(controllerResult.current.field.disabled).toBe(true),
         )();
     });
 
@@ -159,7 +159,7 @@ describe('useController', () => {
         const spy = vi.spyOn(formResult.current.control, '_executeSchemaAndUpdateState');
 
         await act(async () => {
-            controllerResult.current.onChange({ target: { value: 'new value' } });
+            controllerResult.current.field.onChange({ target: { value: 'new value' } });
         });
 
         expect(spy).not.toHaveBeenCalled();
@@ -172,7 +172,7 @@ describe('useController', () => {
         const spy = vi.spyOn(formResult.current.control, '_executeSchemaAndUpdateState');
 
         await act(async () => {
-            controllerResult.current.onBlur();
+            controllerResult.current.field.onBlur();
         });
 
         expect(spy).not.toHaveBeenCalled();
@@ -199,11 +199,11 @@ describe('useController', () => {
     it('should validate on blur when mode is onTouched and field is not touched', async () => {
         const form = mockFormReturn;
         form.control._options.mode = 'onTouched';
-        const controller = useController({ name: 'mock', form });
+        const controller = renderHook(() => useController({ name: 'mock', form })).result.current;
         const spy = vi.spyOn(form.control, '_executeSchemaAndUpdateState');
 
         await act(async () => {
-            controller.onBlur();
+            controller.field.onBlur();
         });
         expect(spy).toHaveBeenCalled();
     });
@@ -213,11 +213,11 @@ describe('useController', () => {
         form.control._options.mode = 'onTouched';
         form.formState$.touchedFields.set({ mock: true });
 
-        const controller = useController({ name: 'mock', form });
+        const controller = renderHook(() => useController({ name: 'mock', form })).result.current;
         const spy = vi.spyOn(form.control, '_executeSchemaAndUpdateState');
 
         await act(async () => {
-            controller.onBlur();
+            controller.field.onBlur();
         });
 
         expect(spy).not.toHaveBeenCalled();
@@ -227,11 +227,11 @@ describe('useController', () => {
         const form = mockFormReturn;
         form.control._options.mode = 'onBlur';
 
-        const controller = useController({ name: 'mock', form });
+        const controller = renderHook(() => useController({ name: 'mock', form })).result.current;
         const spy = vi.spyOn(form.control, '_executeSchemaAndUpdateState');
 
         await act(async () => {
-            controller.onBlur();
+            controller.field.onBlur();
         });
 
         expect(spy).toHaveBeenCalled();
@@ -244,10 +244,10 @@ describe('useController', () => {
         form.control._formState.isSubmitted = true;
         form.control._executeSchemaAndUpdateState = mockExecuteSchema;
 
-        const controller = useController({ name: 'mock', form });
+        const controller = renderHook(() => useController({ name: 'mock', form })).result.current;
 
         await act(async () => {
-            controller.onBlur();
+            controller.field.onBlur();
         });
 
         expect(mockExecuteSchema).toHaveBeenCalled();
@@ -258,9 +258,9 @@ describe('useController', () => {
         const form = mockFormReturn;
         form.getValues = vi.fn().mockReturnValue('test value');
 
-        const controller = useController({ name: 'mock', form });
+        const controller = renderHook(() => useController({ name: 'mock', form })).result.current;
 
-        expect(controller.value).toBe('test value');
+        expect(controller.field.value).toBe('test value');
         expect(form.getValues).toHaveBeenCalledWith('mock');
     });
 
@@ -269,17 +269,38 @@ describe('useController', () => {
         form.getValues = vi.fn().mockReturnValue(undefined as any);
         form.control._options.defaultValues = { mock: 'default value' };
 
-        const controller = useController({ name: 'mock', form });
+        const controller = renderHook(() => useController({ name: 'mock', form })).result.current;
 
-        expect(controller.value).toBe('default value');
+        expect(controller.field.value).toBe('default value');
     });
 
     it('should return correct disabled state', () => {
         const form = mockFormReturn;
         form.control._formState.disabled = true;
 
-        const controller = useController({ name: 'mock', form });
+        const controller = renderHook(() => useController({ name: 'mock', form })).result.current;
 
-        expect(controller.disabled).toBe(true);
+        expect(controller.field.disabled).toBe(true);
+    });
+
+    it('should return correct field state from getFieldState', () => {
+        const form = mockFormReturn;
+        const mockFieldState = { isDirty: true, isTouched: false };
+        form.getFieldState = vi.fn().mockReturnValue(mockFieldState);
+
+        const controller = renderHook(() => useController({ name: 'mock', form })).result.current;
+
+        expect(controller.fieldState).toEqual(mockFieldState);
+        expect(form.getFieldState).toHaveBeenCalledWith('mock');
+    });
+
+    it('should return correct form state from getFormState', () => {
+        const form = mockFormReturn;
+        const mockFormState = { isDirty: true, isTouched: false };
+        form.control._formState = mockFormState as any;
+
+        const controller = renderHook(() => useController({ name: 'mock', form })).result.current;
+
+        expect(controller.formState).toEqual(mockFormState);
     });
 });

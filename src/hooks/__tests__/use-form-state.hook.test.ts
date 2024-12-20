@@ -1,12 +1,12 @@
 import { renderHook } from '@testing-library/react-hooks';
 import { afterEach, beforeEach, describe, expect, it, Mock, vi } from 'vitest';
 
-import { useFormContext } from '../../providers/form.provider';
+import { useFormContext } from '../use-form-context.hook';
 import { useFormState } from '../use-form-state.hook';
 
 import { getMockForm } from './mock-form';
 
-vi.mock('../../providers/form.provider', () => ({
+vi.mock('../use-form-context.hook', () => ({
     useFormContext: vi.fn(),
 }));
 

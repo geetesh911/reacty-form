@@ -5,35 +5,68 @@ import type {
     FieldArrayPath,
     FieldValues,
     UseFieldArrayMove,
-    UseFieldArrayProps as _UseFieldArrayProps,
+    UseFieldArrayProps,
     UseFieldArrayRemove,
     UseFieldArrayReplace,
     UseFieldArrayReturn,
     UseFieldArraySwap,
     UseFieldArrayUpdate,
-    UseFormReturn,
 } from '../types';
 import { cloneObject, convertToArrayPayload, get } from '../utils';
 
-export interface UseFieldArrayProps<
-    TFieldValues extends FieldValues = FieldValues,
-    TFieldArrayName extends FieldArrayPath<TFieldValues> = FieldArrayPath<TFieldValues>,
-    TKeyName extends string = 'id',
-> extends Pick<_UseFieldArrayProps<TFieldValues, TFieldArrayName, TKeyName>, 'name'> {
-    form: UseFormReturn<TFieldValues>;
-}
+import { useFormContext } from './use-form-context.hook';
 
+/**
+ * A custom hook that exposes convenient methods to perform operations with a list of dynamic inputs that need to be appended, updated, removed etc. • [Demo](https://codesandbox.io/s/per-form-usefieldarray-ssugn) • [Video](https://youtu.be/4MrbfGSFY2A)
+ *
+ * @remarks
+ * [API](https://per-form.com/docs/usefieldarray)
+ *
+ * @param props - useFieldArray props
+ *
+ * @returns methods - functions to manipulate with the Field Arrays (dynamic inputs) {@link UseFieldArrayReturn}
+ *
+ * @example
+ * ```tsx
+ * function App() {
+ *   const form = useForm({
+ *     defaultValues: {
+ *       test: []
+ *     }
+ *   });
+ *   const { fields, append } = useFieldArray({
+ *     form,
+ *     name: "test"
+ *   });
+ *
+ *   return (
+ *     <form onSubmit={handleSubmit(data => console.log(data))}>
+ *       {fields.map((item, index) => (
+ *          <input key={item.id} {...form.register(`test.${index}.firstName`)}  />
+ *       ))}
+ *       <button type="button" onClick={() => append({ firstName: "bill" })}>
+ *         append
+ *       </button>
+ *       <input type="submit" />
+ *     </form>
+ *   );
+ * }
+ * ```
+ */
 export function useFieldArray<
     TFieldValues extends FieldValues = FieldValues,
     TFieldArrayName extends FieldArrayPath<TFieldValues> = FieldArrayPath<TFieldValues>,
     TKeyName extends string = 'id',
->({
-    name,
-    form,
-}: UseFieldArrayProps<TFieldValues, TFieldArrayName, TKeyName>): Omit<
-    UseFieldArrayReturn<TFieldValues, TFieldArrayName, TKeyName>,
-    'fields'
-> {
+>(
+    props: UseFieldArrayProps<TFieldValues, TFieldArrayName, TKeyName>,
+): Omit<UseFieldArrayReturn<TFieldValues, TFieldArrayName, TKeyName>, 'fields'> {
+    const formContext = useFormContext();
+    const { name, form = formContext } = props ?? {};
+
+    if (!form) {
+        throw new Error('Form is not provided');
+    }
+
     const _getWithIndex = (
         index: number,
     ): Observable<Partial<FieldArray<FieldValues, FieldArrayPath<FieldValues>>>> => {

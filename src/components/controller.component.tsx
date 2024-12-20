@@ -49,11 +49,11 @@ const ControllerComponent = <
     render,
     formatValue,
 }: ControllerProps<TFieldValues, TName, TComponent>): React.ReactNode => {
-    const control = useController<TFieldValues, TName>({ name, form, formatValue });
+    const { field } = useController<TFieldValues, TName>({ name, form, formatValue });
 
     return render
-        ? render(control)
-        : createElement(component as React.FC<DefaultProps>, { ...componentProps, ...control });
+        ? render(field)
+        : createElement(component as React.FC<DefaultProps>, { ...componentProps, ...field });
 };
 
 export const Controller = observer(ControllerComponent);

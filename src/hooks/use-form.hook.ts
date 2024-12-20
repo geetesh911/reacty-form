@@ -33,20 +33,49 @@ import type {
 import {
     cloneObject,
     convertToArrayPayload,
+    deepEqual,
     get,
     isEmptyObject,
+    isFunction,
     isString,
     isUndefined,
+    set,
+    setObservable,
+    unsetObservable,
 } from '../utils';
-import deepEqual from '../utils/deep-equal';
-import { isFunction } from '../utils/is-function';
-import { set } from '../utils/set';
 
 const defaultOptions = {
     mode: VALIDATION_MODE.onSubmit,
     reValidateMode: VALIDATION_MODE.onChange,
 };
 
+/**
+ * Custom hook to manage the entire form.
+ *
+ * @remarks
+ * [API](https://per-form.com/docs/useform)
+ *
+ * @param props - form configuration and validation parameters.
+ *
+ * @returns methods - individual functions to manage the form state. {@link UseFormReturn}
+ *
+ * @example
+ * ```tsx
+ * function App() {
+ *   const { register, handleSubmit, formState: { errors } } = useForm();
+ *   const onSubmit = data => console.log(data);
+ *
+ *   return (
+ *     <form onSubmit={handleSubmit(onSubmit)}>
+ *       <input defaultValue="test" {...register("example")} />
+ *       <input {...register("exampleRequired", { required: true })} />
+ *       {errors.exampleRequired && <span>This field is required</span>}
+ *       <button>Submit</button>
+ *     </form>
+ *   );
+ * }
+ * ```
+ */
 export function useForm<
     TFieldValues extends FieldValues = FieldValues,
     TContext = any,
@@ -154,9 +183,14 @@ export function useForm<
         if (names) {
             for (const name of names) {
                 const error: FieldError = get(errors, name);
-                const errorValue: Observable<FieldError> = get(errors$, name);
 
-                error ? errorValue.set(error) : errorValue?.delete();
+                if (!error || isEmptyObject(error)) {
+                    unsetObservable(errors$, name);
+
+                    continue;
+                }
+
+                setObservable(errors$, name, error);
             }
         } else {
             _setErrors(errors);
@@ -243,7 +277,8 @@ export function useForm<
         batch(() => {
             field.set(value);
             isDirty$.set(true);
-            dirtyFields$.set({ ...dirtyFields$.get(), [name]: true });
+
+            setObservable(dirtyFields$, name, true);
         });
     };
 
@@ -295,7 +330,7 @@ export function useForm<
 
         const { message, type, ...restOfErrorTree } = currentError;
 
-        currentError.set({ ...restOfErrorTree, ...error });
+        setObservable(errors$, name, { ...restOfErrorTree, ...error });
     };
 
     const clearErrors: UseFormClearErrors<TFieldValues> = (name) => {
@@ -427,11 +462,11 @@ export function useForm<
 
     const getFieldState: UseFormGetFieldState<TFieldValues> = (name) => {
         return {
-            invalid: !!get(errors$, name).get(),
-            isDirty: !!get(dirtyFields$, name).get(),
-            error: get(errors$, name).get() as FieldError,
+            invalid: !!get(errors$, name)?.get(),
+            isDirty: !!get(dirtyFields$, name)?.get(),
+            error: get(errors$, name)?.get() as FieldError,
             isValidating: false, // need to implement
-            isTouched: !!get(touchedFields$, name).get(),
+            isTouched: !!get(touchedFields$, name)?.get(),
         };
     };
 

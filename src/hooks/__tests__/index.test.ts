@@ -15,6 +15,10 @@ describe('hooks index', () => {
         expect(Hooks.useForm).toBeDefined();
     });
 
+    it('should re-export useFormContext', () => {
+        expect(Hooks.useFormContext).toBeDefined();
+    });
+
     it('should re-export useFormState', () => {
         expect(Hooks.useFormState).toBeDefined();
     });

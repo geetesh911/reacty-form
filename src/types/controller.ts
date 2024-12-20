@@ -1,7 +1,6 @@
 import type React from 'react';
 
 import type {
-    Control,
     FieldError,
     FieldPath,
     FieldPathValue,
@@ -10,7 +9,6 @@ import type {
     RefCallBack,
     UseFormStateReturn,
 } from './';
-import type { RegisterOptions } from './validator';
 
 export type ControllerFieldState = {
     invalid: boolean;
@@ -29,22 +27,14 @@ export type ControllerRenderProps<
     value: FieldPathValue<TFieldValues, TName>;
     disabled?: boolean;
     name: TName;
-    ref: RefCallBack;
+    ref?: RefCallBack;
 };
 
 export type UseControllerProps<
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-> = {
-    name: TName;
-    rules?: Omit<
-        RegisterOptions<TFieldValues, TName>,
-        'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-    >;
-    shouldUnregister?: boolean;
-    defaultValue?: FieldPathValue<TFieldValues, TName>;
-    control?: Control<TFieldValues>;
-    disabled?: boolean;
+> = Omit<ControllerRenderProps<TFieldValues, TName>, 'ref'> & {
+    formatValue?: (value: unknown) => FieldPathValue<TFieldValues, TName>;
 };
 
 export type UseControllerReturn<

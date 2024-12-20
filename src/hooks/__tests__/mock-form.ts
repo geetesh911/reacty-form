@@ -1,7 +1,7 @@
 import { Observable, observable } from '@legendapp/state';
 import { vi } from 'vitest';
 
-import type { Control, FormState, UseFormReturn } from '../../types';
+import type { Control, FieldErrors, FormState, UseFormReturn } from '../../types';
 
 type FieldValues = { mock: string };
 
@@ -9,7 +9,7 @@ export const getMockForm = () => {
     const mockFormState: FormState<FieldValues> = {
         isDirty: false,
         isValid: true,
-        errors: {},
+        errors: {} as FieldErrors<FieldValues>,
         touchedFields: {},
         dirtyFields: {},
         isSubmitting: false,
@@ -22,11 +22,11 @@ export const getMockForm = () => {
         validatingFields: {},
     };
     const observableFormState: Observable<FormState<FieldValues>> = observable({
-        defaultValues: {},
-        errors: {},
-        touchedFields: {},
-        dirtyFields: {},
-        validatingFields: {},
+        defaultValues: {} as FormState<FieldValues>['defaultValues'],
+        errors: {} as FormState<FieldValues>['errors'],
+        touchedFields: {} as FormState<FieldValues>['touchedFields'],
+        dirtyFields: {} as FormState<FieldValues>['dirtyFields'],
+        validatingFields: {} as FormState<FieldValues>['validatingFields'],
         isDirty: false as boolean,
         isValid: true as boolean,
         isSubmitting: false as boolean,

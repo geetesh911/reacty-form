@@ -2,7 +2,7 @@ import { isDateObject } from './is-date-object';
 import { isObject } from './is-object';
 import { isPrimitive } from './is-primitive';
 
-export default function deepEqual(object1: any, object2: any) {
+export function deepEqual(object1: any, object2: any) {
     if (isPrimitive(object1) || isPrimitive(object2)) {
         return object1 === object2;
     }

@@ -16,7 +16,7 @@ const TestInput: React.FC<{
     <input data-testid="test-input" value={value} onChange={onChange} onBlur={onBlur} />
 );
 
-vi.mock('../../providers/form.provider', () => ({
+vi.mock('../../hooks/use-form-context.hook.ts', () => ({
     useFormContext: vi.fn(),
 }));
 

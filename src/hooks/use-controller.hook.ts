@@ -2,30 +2,49 @@ import { batch, type Observable } from '@legendapp/state';
 
 import type { ControllerProps } from '../components/controller.component';
 import { getEventValue } from '../logic/get-event-value';
-import { useFormContext } from '../providers/form.provider';
 import type {
-    ControllerRenderProps,
     FieldPath,
-    FieldPathValue,
     FieldValues,
     FormState,
     PathValue,
+    UseControllerReturn,
     UseFormGetValues,
+    UseFormReturn,
     UseFormSetValue,
+    UseFormStateReturn,
 } from '../types';
-import { get } from '../utils';
+import { get, setObservable } from '../utils';
 
-export type UseControllerProps<
-    TFieldValues extends FieldValues = FieldValues,
-    TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
-> = Omit<ControllerRenderProps<TFieldValues, TName>, 'ref'> & {
-    formatValue?: (value: unknown) => FieldPathValue<TFieldValues, TName>;
-};
+import { useFormContext } from './use-form-context.hook';
 
+/**
+ * Custom hook to work with controlled component, this function provide you with both form and field level state. Re-render is isolated at the hook level.
+ *
+ * @remarks
+ * [API](https://per-form.com/docs/usecontroller)
+ *
+ * @param props - the path name to the form field value, and validation rules.
+ *
+ * @returns field properties, field and form state. {@link UseControllerReturn}
+ *
+ * @example
+ * ```tsx
+ * function Input(props) {
+ *   const { field, fieldState, formState } = useController(props);
+ *   return (
+ *     <div>
+ *       <input {...field} placeholder={props.name} />
+ *       <p>{fieldState.isTouched && "Touched"}</p>
+ *       <p>{formState.isSubmitted ? "submitted" : ""}</p>
+ *     </div>
+ *   );
+ * }
+ * ```
+ */
 export function useController<
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->(props: ControllerProps<TFieldValues, TName>): UseControllerProps<TFieldValues, TName> {
+>(props: ControllerProps<TFieldValues, TName>): UseControllerReturn<TFieldValues, TName> {
     const formContext = useFormContext();
     const { name, form = formContext, formatValue } = props ?? {};
 
@@ -35,7 +54,7 @@ export function useController<
 
     const formState$ = form.formState$ as Observable<FormState<FieldValues>>;
 
-    const onChange = (e: unknown): void => {
+    const onChange = async (e: unknown): Promise<void> => {
         let value = getEventValue(e) as PathValue<TFieldValues, TName>;
 
         if (formatValue) {
@@ -44,43 +63,36 @@ export function useController<
 
         (form.setValue as UseFormSetValue<TFieldValues>)(name, value);
 
-        batch(async () => {
-            if (
-                formState$.isSubmitted.get()
-                    ? form.control._options.reValidateMode === 'onChange'
-                    : form.control._options.mode === 'onChange'
-            ) {
-                form.control._executeSchemaAndUpdateState();
-            }
-
-            formState$.isDirty.set(true);
-            get(formState$.dirtyFields, name)?.set(true);
-        });
+        if (
+            formState$.isSubmitted.peek()
+                ? form.control._options.reValidateMode === 'onChange'
+                : form.control._options.mode === 'onChange'
+        ) {
+            await form.control._executeSchemaAndUpdateState([name]);
+        }
     };
 
-    const onBlur = (): void => {
+    const onBlur = async (): Promise<void> => {
         batch(async () => {
             const field = get(formState$.touchedFields, name);
 
-            if (form.control._options.mode === 'onTouched' && !field?.get()) {
-                form.control._executeSchemaAndUpdateState();
+            if (form.control._options.mode === 'onTouched' && !field?.peek()) {
+                await form.control._executeSchemaAndUpdateState([name]);
             }
 
             if (
-                formState$.isSubmitted.get()
+                formState$.isSubmitted.peek()
                     ? form.control._options.reValidateMode === 'onBlur'
                     : form.control._options.mode === 'onBlur'
             ) {
-                form.control._executeSchemaAndUpdateState();
+                await form.control._executeSchemaAndUpdateState([name]);
             }
 
-            field?.get()
-                ? field.set(true)
-                : formState$.touchedFields.set({ ...formState$.touchedFields.get(), [name]: true });
+            field?.peek() ? field.set(true) : setObservable(formState$.touchedFields, name, true);
         });
     };
 
-    return {
+    const field = {
         onChange,
         onBlur,
         get value() {
@@ -92,6 +104,16 @@ export function useController<
         name,
         get disabled() {
             return form.control._formState.disabled;
+        },
+    };
+
+    return {
+        field,
+        get fieldState() {
+            return (form as UseFormReturn<FieldValues>).getFieldState(name);
+        },
+        get formState() {
+            return form.control._formState as UseFormStateReturn<TFieldValues>;
         },
     };
 }
