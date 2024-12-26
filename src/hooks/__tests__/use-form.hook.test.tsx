@@ -11,6 +11,7 @@ afterEach(() => {
 import { batch } from '@legendapp/state';
 
 import { VALIDATION_MODE } from '../../constants';
+import { get } from '../../utils';
 import { useForm } from '../use-form.hook';
 
 type FormValues = {
@@ -727,16 +728,19 @@ describe('useForm Hook', () => {
             expect(result.current.formState$.dirtyFields.get()).toEqual({});
         });
 
-        it('should reset form state with keep options correctly', () => {
+        it('should reset form state with keep options correctly', async () => {
             const { result } = renderHook(() => useForm({ defaultValues }));
 
-            act(() => {
+            await act(async () => {
                 result.current.setValue('name', 'Doe');
-                result.current.reset({}, { keepDirty: true, keepDirtyValues: true });
+                await result.current.reset({}, { keepDirty: true, keepDirtyValues: true });
             });
 
             expect(result.current.control._formState.isDirty).toBe(true);
-            expect(result.current.control._formState.dirtyFields).toEqual({ name: true });
+            expect(result.current.control._formState.dirtyFields).toEqual({
+                name: true,
+                age: false,
+            });
         });
 
         it('should reset default values correctly', async () => {
@@ -1819,7 +1823,7 @@ describe('useForm Hook', () => {
                 result.current.setValue('name', 'Jane');
             });
 
-            expect(result.current.formState$.dirtyFields.get()).toEqual({ name: true });
+            expect(result.current.formState$.dirtyFields.get()).toEqual({ name: true, age: false });
             expect(result.current.formState$.isDirty.get()).toBe(true);
         });
 
@@ -1878,6 +1882,355 @@ describe('useForm Hook', () => {
             const { result } = renderHook(() => useForm({ defaultValues: { field: null } }));
 
             expect(result.current.values$.field.get()).toBeNull();
+        });
+
+        it('should focus field when setError is called with shouldFocus option', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name');
+            const inputElement = document.createElement('input');
+            const focusMock = vi.fn();
+            inputElement.focus = focusMock;
+
+            act(() => {
+                field.ref(inputElement);
+            });
+
+            act(() => {
+                result.current.setError(
+                    'name',
+                    { type: 'custom', message: 'Error' },
+                    { shouldFocus: true },
+                );
+            });
+
+            expect(focusMock).toHaveBeenCalled();
+        });
+
+        it('should not focus field when setError is called without shouldFocus option', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name');
+            const inputElement = document.createElement('input');
+            const focusMock = vi.fn();
+            inputElement.focus = focusMock;
+
+            act(() => {
+                field.ref(inputElement);
+            });
+
+            act(() => {
+                result.current.setError('name', { type: 'custom', message: 'Error' });
+            });
+
+            expect(focusMock).not.toHaveBeenCalled();
+        });
+
+        it('should handle setError with shouldFocus when field has no focus method', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name');
+            const inputElement = document.createElement('div'); // div has no focus method
+
+            act(() => {
+                field.ref(inputElement);
+            });
+
+            act(() => {
+                // This should not throw an error
+                result.current.setError(
+                    'name',
+                    { type: 'custom', message: 'Error' },
+                    { shouldFocus: true },
+                );
+            });
+
+            // Test passes if no error is thrown
+            expect(true).toBe(true);
+        });
+
+        it('should handle setError with shouldFocus when field ref is undefined', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+
+            act(() => {
+                // This should not throw an error
+                result.current.setError(
+                    'nonexistent' as any,
+                    { type: 'custom', message: 'Error' },
+                    { shouldFocus: true },
+                );
+            });
+
+            // Test passes if no error is thrown
+            expect(true).toBe(true);
+        });
+    });
+
+    describe('Field Registration', () => {
+        it('should register field correctly with default options', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name');
+
+            expect(field).toHaveProperty('name', 'name');
+            expect(field).toHaveProperty('onChange');
+            expect(field).toHaveProperty('onBlur');
+            expect(field).toHaveProperty('ref');
+        });
+
+        it('should register field with custom options', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name', {
+                required: true,
+                min: 3,
+                max: 10,
+            });
+
+            expect(field).toHaveProperty('name', 'name');
+            expect(field).toHaveProperty('required', true);
+            expect(field).toHaveProperty('min', 3);
+            expect(field).toHaveProperty('max', 10);
+        });
+
+        it('should handle disabled fields correctly', () => {
+            const { result } = renderHook(() => useForm({ defaultValues, disabled: true }));
+            const field = result.current.register('name');
+
+            expect(field).toHaveProperty('disabled', true);
+        });
+
+        it('should handle field-level disabled option', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name', { disabled: true });
+
+            expect(field).toHaveProperty('disabled', true);
+        });
+
+        it('should handle onChange event correctly', async () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name');
+
+            await act(async () => {
+                await field.onChange({ target: { value: 'John Doe' } });
+            });
+
+            expect(result.current.getValues('name')).toBe('John Doe');
+        });
+
+        it('should handle onBlur event correctly', async () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name');
+
+            await act(async () => {
+                await field.onBlur({ target: {} });
+            });
+
+            expect(result.current.formState$.touchedFields.get()).toHaveProperty('name', true);
+        });
+
+        it('should handle ref callback with input element', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name');
+            const inputElement = document.createElement('input');
+
+            act(() => {
+                field.ref(inputElement);
+            });
+
+            const fields = result.current.control._fields;
+            const fieldRef = get(fields, 'name');
+
+            expect(fieldRef._f.ref).toBe(inputElement);
+        });
+
+        // it('should handle ref callback with null', () => {
+        //     const { result } = renderHook(() => useForm({ defaultValues }));
+        //     const field = result.current.register('name');
+
+        //     act(() => {
+        //         field.ref(null);
+        //     });
+
+        //     const fieldRef = get(result.current.control._fields, 'name');
+        //     expect(fieldRef?._f?.mount).toBe(false);
+        // });
+
+        it('should validate on change when mode is onChange', async () => {
+            const { result } = renderHook(() =>
+                useForm<FormValues>({
+                    defaultValues,
+                    mode: 'onChange',
+                    resolver: async () => ({
+                        errors: { name: { type: 'required', message: 'Required' } },
+                        values: {},
+                    }),
+                }),
+            );
+            const field = result.current.register('name');
+
+            await act(async () => {
+                await field.onChange({ target: { value: '' } });
+            });
+
+            expect(result.current.formState$.errors.get()).toHaveProperty('name');
+        });
+
+        it('should validate on blur when mode is onBlur', async () => {
+            const { result } = renderHook(() =>
+                useForm<FormValues>({
+                    defaultValues,
+                    mode: 'onBlur',
+                    resolver: async () => ({
+                        errors: { name: { type: 'required', message: 'Required' } },
+                        values: {},
+                    }),
+                }),
+            );
+            const field = result.current.register('name');
+
+            await act(async () => {
+                await field.onBlur({ target: {} });
+            });
+
+            expect(result.current.formState$.errors.get()).toHaveProperty('name');
+        });
+
+        it('should handle radio/checkbox fields correctly', async () => {
+            const { result } = renderHook(() => useForm());
+            const field = result.current.register('name');
+            const radioElement = document.createElement('input');
+            radioElement.type = 'radio';
+
+            act(() => {
+                field.ref(radioElement);
+            });
+
+            const fields = result.current.control._fields;
+            const fieldRef = get(fields, 'name');
+
+            expect(fieldRef._f.refs).toBeDefined();
+            expect(Array.isArray(fieldRef._f.refs)).toBe(true);
+            expect(fieldRef._f.refs).toContain(radioElement);
+        });
+
+        it('should handle progressive validation options', () => {
+            const { result } = renderHook(() =>
+                useForm({
+                    defaultValues,
+                    progressive: true,
+                }),
+            );
+            const field = result.current.register('name', {
+                required: true,
+                minLength: 3,
+                maxLength: 10,
+                min: 0,
+                max: 100,
+            });
+
+            expect(field).toHaveProperty('required', true);
+            expect(field).toHaveProperty('minLength', 3);
+            expect(field).toHaveProperty('maxLength', 10);
+            expect(field).toHaveProperty('min', 0);
+            expect(field).toHaveProperty('max', 100);
+        });
+    });
+
+    describe('Update Touch And Dirty', () => {
+        it('should update dirty state correctly when disabled', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+
+            act(() => {
+                // Simulate updating touch and dirty with disabled true
+                result.current.control._updateDisabledField({
+                    disabled: true,
+                    name: 'name',
+                    value: 'test',
+                });
+            });
+
+            expect(result.current.formState$.isDirty.get()).toBe(false);
+            expect(result.current.formState$.dirtyFields.get()).toEqual({});
+        });
+
+        it('should update touch state on blur event', async () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name');
+
+            await act(async () => {
+                field.onBlur({ target: {} });
+            });
+
+            expect(result.current.formState$.touchedFields.get()).toHaveProperty('name', true);
+        });
+
+        it('should update dirty state when value changes', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+
+            act(() => {
+                result.current.setValue('name', 'test');
+            });
+
+            expect(result.current.formState$.isDirty.get()).toBe(true);
+            expect(result.current.formState$.dirtyFields.get()).toHaveProperty('name', true);
+        });
+
+        it('should handle multiple successive updates correctly', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+
+            act(() => {
+                // First update
+                result.current.setValue('name', 'test1');
+                // Second update back to original
+                result.current.setValue('name', defaultValues.name);
+            });
+
+            expect(result.current.formState$.isDirty.get()).toBe(false);
+            expect(result.current.formState$.dirtyFields.get()).toEqual({
+                name: false,
+                age: false,
+            });
+        });
+
+        it('should handle batch updates correctly', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+
+            act(() => {
+                batch(() => {
+                    result.current.setValue('name', 'test');
+                    result.current.setValue('age', 40);
+                });
+            });
+
+            expect(result.current.formState$.isDirty.get()).toBe(true);
+            expect(result.current.formState$.dirtyFields.get()).toEqual({
+                name: true,
+                age: true,
+            });
+        });
+
+        it('should maintain touched state after value resets', async () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name');
+
+            await act(async () => {
+                // Touch the field
+                await field.onBlur({ target: {} });
+                // Change value
+                result.current.setValue('name', 'test');
+                // Reset value
+                result.current.setValue('name', defaultValues.name);
+            });
+
+            expect(result.current.formState$.touchedFields.get()).toHaveProperty('name', true);
+            expect(result.current.formState$.isDirty.get()).toBe(false);
+        });
+
+        it('should handle undefined values correctly', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+
+            act(() => {
+                result.current.setValue('name', undefined);
+            });
+
+            expect(result.current.formState$.isDirty.get()).toBe(true);
+            expect(result.current.formState$.dirtyFields.get()).toHaveProperty('name', true);
         });
     });
 });

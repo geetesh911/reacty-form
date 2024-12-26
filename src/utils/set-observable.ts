@@ -11,7 +11,6 @@ export const setObservable = (
     path: FieldPath<FieldValues>,
     value?: unknown,
 ) => {
-    let updatedObject = object;
     let index = -1;
     const tempPath = isKey(path) ? [path] : stringToPath(path);
     const length = tempPath.length;
@@ -22,7 +21,7 @@ export const setObservable = (
         let newValue = value;
 
         if (index !== lastIndex) {
-            let objValue = updatedObject[key];
+            let objValue = object[key];
 
             if (isObservable(objValue)) {
                 objValue = objValue.get();
@@ -40,12 +39,12 @@ export const setObservable = (
             return;
         }
 
-        if (isObservable(updatedObject[key])) {
-            updatedObject[key].set(newValue);
+        if (isObservable(object[key])) {
+            object[key].set(newValue);
         }
 
-        updatedObject = updatedObject[key] as Observable<FieldValues>;
+        object = object[key] as Observable<FieldValues>;
     }
 
-    return updatedObject;
+    return object;
 };

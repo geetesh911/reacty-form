@@ -45,7 +45,7 @@ describe('Controller', () => {
             <Controller
                 name="test"
                 form={form}
-                render={({ value, onChange, onBlur }) => (
+                render={({ field: { value, onChange, onBlur } }) => (
                     <input
                         data-testid="test-input"
                         value={value}
@@ -85,7 +85,7 @@ describe('Controller', () => {
                 name="test"
                 form={form}
                 component={TestInput as React.FC}
-                formatValue={formatValue}
+                setValueAs={formatValue}
             />,
         );
 

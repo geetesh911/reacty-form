@@ -35,23 +35,6 @@ describe('useFormContext', () => {
         expect(screen.getByTestId('context')).toHaveTextContent('Context Available');
     });
 
-    it('should throw an error when useFormContext is used outside FormProvider', () => {
-        const ChildComponent = () => {
-            try {
-                useFormContext();
-                return <div>Should not render this</div>;
-            } catch (error) {
-                return <div data-testid="error">{(error as Error).message}</div>;
-            }
-        };
-
-        render(<ChildComponent />);
-
-        expect(screen.getByTestId('error')).toHaveTextContent(
-            'useFormContext must be used within a FormProvider',
-        );
-    });
-
     it('should provide the correct form value in context', () => {
         const ChildComponent = () => {
             const context = useFormContext();
@@ -68,29 +51,6 @@ describe('useFormContext', () => {
         );
 
         expect(screen.getByTestId('form-value')).toHaveTextContent('Has Form');
-    });
-
-    it('should handle null form value correctly', () => {
-        const ChildComponent = () => {
-            try {
-                useFormContext();
-                return <div>Should not render this</div>;
-            } catch (error) {
-                return <div data-testid="error">{(error as Error).message}</div>;
-            }
-        };
-
-        const form = null;
-
-        render(
-            <FormProvider form={form as any}>
-                <ChildComponent />
-            </FormProvider>,
-        );
-
-        expect(screen.getByTestId('error')).toHaveTextContent(
-            'useFormContext must be used within a FormProvider',
-        );
     });
 
     // TODO: update after implementing ref

@@ -1,19 +1,19 @@
-import { batch, type Observable } from '@legendapp/state';
+import { useMemo } from 'react';
+import { type Observable } from '@legendapp/state';
 
-import type { ControllerProps } from '../components/controller.component';
-import { getEventValue } from '../logic/get-event-value';
 import type {
     FieldPath,
     FieldValues,
     FormState,
     PathValue,
+    UseControllerProps,
     UseControllerReturn,
     UseFormGetValues,
+    UseFormRegister,
     UseFormReturn,
-    UseFormSetValue,
     UseFormStateReturn,
 } from '../types';
-import { get, setObservable } from '../utils';
+import { get, isBoolean } from '../utils';
 
 import { useFormContext } from './use-form-context.hook';
 
@@ -44,66 +44,44 @@ import { useFormContext } from './use-form-context.hook';
 export function useController<
     TFieldValues extends FieldValues = FieldValues,
     TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
->(props: ControllerProps<TFieldValues, TName>): UseControllerReturn<TFieldValues, TName> {
+>(props: UseControllerProps<TFieldValues, TName>): UseControllerReturn<TFieldValues, TName> {
     const formContext = useFormContext();
-    const { name, form = formContext, formatValue } = props ?? {};
+    const { name, form = formContext, setValueAs, defaultValue, disabled } = props ?? {};
 
     if (!form) {
-        throw new Error('Form is not provided');
+        throw new Error(
+            'Form is not provided, either pass the form in props or wrap you form inside FormProvider',
+        );
     }
 
     const formState$ = form.formState$ as Observable<FormState<FieldValues>>;
 
-    const onChange = async (e: unknown): Promise<void> => {
-        let value = getEventValue(e) as PathValue<TFieldValues, TName>;
-
-        if (formatValue) {
-            value = formatValue(value);
-        }
-
-        (form.setValue as UseFormSetValue<TFieldValues>)(name, value);
-
-        if (
-            formState$.isSubmitted.peek()
-                ? form.control._options.reValidateMode === 'onChange'
-                : form.control._options.mode === 'onChange'
-        ) {
-            await form.control._executeSchemaAndUpdateState([name]);
-        }
-    };
-
-    const onBlur = async (): Promise<void> => {
-        batch(async () => {
-            const field = get(formState$.touchedFields, name);
-
-            if (form.control._options.mode === 'onTouched' && !field?.peek()) {
-                await form.control._executeSchemaAndUpdateState([name]);
-            }
-
-            if (
-                formState$.isSubmitted.peek()
-                    ? form.control._options.reValidateMode === 'onBlur'
-                    : form.control._options.mode === 'onBlur'
-            ) {
-                await form.control._executeSchemaAndUpdateState([name]);
-            }
-
-            field?.peek() ? field.set(true) : setObservable(formState$.touchedFields, name, true);
-        });
-    };
+    const registerProps = useMemo(
+        () =>
+            (form.register as UseFormRegister<TFieldValues>)(name, {
+                setValueAs,
+                ...(isBoolean(props.disabled) ? { disabled: props.disabled } : {}),
+            }),
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+        [name, formState$.disabled.peek()],
+    );
 
     const field = {
-        onChange,
-        onBlur,
+        onChange: registerProps.onChange,
+        onBlur: registerProps.onBlur,
+        ref: registerProps.ref,
         get value() {
             return (
                 (form.getValues as UseFormGetValues<TFieldValues>)(name) ??
+                defaultValue ??
                 (get(form.control._options.defaultValues, name) as PathValue<TFieldValues, TName>)
             );
         },
         name,
         get disabled() {
-            return form.control._formState.disabled;
+            const isFormDisabled = form.control._formState.disabled;
+
+            return isBoolean(disabled) || isFormDisabled ? isFormDisabled || disabled : false;
         },
     };
 

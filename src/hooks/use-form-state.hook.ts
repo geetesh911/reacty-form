@@ -39,7 +39,9 @@ export function useFormState<TFieldValues extends FieldValues = FieldValues>(
     const { form = formContext } = props ?? {};
 
     if (!form) {
-        throw new Error('Form is not provided');
+        throw new Error(
+            'Form is not provided, either pass the form in props or wrap you form inside FormProvider',
+        );
     }
 
     return form.formState$.get() as UseFormStateReturn<TFieldValues>;

@@ -64,7 +64,9 @@ export function useFieldArray<
     const { name, form = formContext } = props ?? {};
 
     if (!form) {
-        throw new Error('Form is not provided');
+        throw new Error(
+            'Form is not provided, either pass the form in props or wrap you form inside FormProvider',
+        );
     }
 
     const _getWithIndex = (

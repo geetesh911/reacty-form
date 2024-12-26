@@ -32,12 +32,16 @@ describe('useWatch', () => {
         vi.clearAllMocks();
     });
 
-    it('should throw an error if form is not provided', () => {
+    it('should throw an error if Form is not provided, either pass the form in props or wrap you form inside FormProvider', () => {
         mockUseFormContext.mockReturnValue(undefined);
 
         const { result } = renderHook(() => useWatch({ name: 'test' }, vi.fn()));
 
-        expect(result.error).toEqual(new Error('Form is not provided'));
+        expect(result.error).toEqual(
+            new Error(
+                'Form is not provided, either pass the form in props or wrap you form inside FormProvider',
+            ),
+        );
     });
 
     it('should use form from context if not provided in props', () => {

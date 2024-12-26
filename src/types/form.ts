@@ -804,6 +804,7 @@ export type Control<
     _formState: FormState<TFieldValues>;
     _formValues: FieldValues;
     _defaultValues: Partial<DefaultValues<TFieldValues>>;
+    _fields: FieldRefs;
     _reset: UseFormReset<TFieldValues>;
     _resolver: (values: TFieldValues) => ReturnType<Resolver<TFieldValues, TTransformedValues>>;
     _getDirty: GetIsDirty;
@@ -816,7 +817,7 @@ export type Control<
     _executeSchemaAndUpdateState: (
         names?: Array<InternalFieldName>,
     ) => Promise<object | FieldErrors<TFieldValues>>;
-    _updateDisabledField?: (
+    _updateDisabledField: (
         props: {
             disabled?: boolean;
             name: FieldName<any>;
@@ -876,6 +877,7 @@ export interface UseFormReturn<
     trigger: UseFormTrigger<TFieldValues>;
     resetField: UseFormResetField<TFieldValues>;
     control: Control<TFieldValues, TContext, TTransformedValues>;
+    register: UseFormRegister<TFieldValues>;
 }
 
 export type UseFormStateProps<TFieldValues extends FieldValues> = Partial<{

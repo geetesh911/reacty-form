@@ -35,11 +35,15 @@ describe('useFormState', () => {
         expect(useFormContext).toHaveBeenCalled();
     });
 
-    it('should throw an error if form is not provided and context is not available', () => {
+    it('should throw an error if Form is not provided, either pass the form in props or wrap you form inside FormProvider and context is not available', () => {
         (useFormContext as Mock).mockReturnValue(undefined);
 
         const { result } = renderHook(() => useFormState());
 
-        expect(result.error).toEqual(new Error('Form is not provided'));
+        expect(result.error).toEqual(
+            new Error(
+                'Form is not provided, either pass the form in props or wrap you form inside FormProvider',
+            ),
+        );
     });
 });

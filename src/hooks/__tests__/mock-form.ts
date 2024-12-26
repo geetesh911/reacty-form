@@ -54,6 +54,8 @@ export const getMockForm = () => {
         handleSubmit: vi.fn(),
         getFieldState: vi.fn(),
         setError: vi.fn(),
+        _fields: {},
+        _updateDisabledField: vi.fn(),
     };
     const mockValues$ = observable({ mock: 'value' });
 
@@ -72,6 +74,11 @@ export const getMockForm = () => {
         getFieldState: vi.fn(),
         resetField: vi.fn(),
         values$: mockValues$,
+        register: vi.fn().mockReturnValue({
+            onChange: vi.fn(),
+            onBlur: vi.fn(),
+            ref: vi.fn(),
+        }),
     };
 
     return { mockFormReturn, mockFormState, mockControl, observableFormState };

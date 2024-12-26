@@ -1,7 +1,7 @@
 import React, { createContext } from 'react';
 
 import type { useForm } from '../hooks/use-form.hook';
-import type { FieldValues } from '../types';
+import type { FieldValues, UseFormReturn } from '../types';
 
 export const FormContext = createContext<ReturnType<typeof useForm> | null>(null);
 
@@ -13,7 +13,7 @@ export function FormProvider<
     form,
 }: {
     children: React.ReactNode;
-    form: ReturnType<typeof useForm<TFieldValues, TTransformedValues>>;
+    form: UseFormReturn<TFieldValues, undefined, TTransformedValues>;
 }): React.ReactNode {
     return (
         <FormContext.Provider value={(form as unknown as ReturnType<typeof useForm>) ?? null}>
