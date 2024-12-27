@@ -1,6 +1,6 @@
 {
   "name": "per-form",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Performant, flexible and extensible forms library for React Hooks using Legend State",
   "type": "module",
   "main": "./dist/index.cjs",
