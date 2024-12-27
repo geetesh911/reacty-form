@@ -61,6 +61,7 @@ export const getMockForm = () => {
 
     const mockFormReturn: UseFormReturn<FieldValues> = {
         formState$: observableFormState,
+        formState: observableFormState.get(),
         handleSubmit: vi.fn(),
         reset: vi.fn(),
         setValue: vi.fn(),
@@ -74,6 +75,8 @@ export const getMockForm = () => {
         getFieldState: vi.fn(),
         resetField: vi.fn(),
         values$: mockValues$,
+        values: mockValues$.get(),
+        setFocus: vi.fn(),
         register: vi.fn().mockReturnValue({
             onChange: vi.fn(),
             onBlur: vi.fn(),

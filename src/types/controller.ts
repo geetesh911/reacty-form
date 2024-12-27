@@ -17,7 +17,6 @@ export type ControllerFieldState = {
     invalid: boolean;
     isTouched: boolean;
     isDirty: boolean;
-    isValidating: boolean;
     error?: FieldError;
 };
 
@@ -40,11 +39,6 @@ export type UseControllerProps<
     form?: UseFormReturn<TFieldValues>;
     setValueAs?: (value: any) => FieldPathValue<TFieldValues, TName>;
     name: TName;
-    // rules?: Omit<
-    //     RegisterOptions<TFieldValues, TName>,
-    //     'valueAsNumber' | 'valueAsDate' | 'setValueAs' | 'disabled'
-    // >;
-    // shouldUnregister?: boolean;
     defaultValue?: FieldPathValue<TFieldValues, TName>;
     disabled?: boolean;
 };

@@ -1942,7 +1942,6 @@ describe('useForm Hook', () => {
                 );
             });
 
-            // Test passes if no error is thrown
             expect(true).toBe(true);
         });
 
@@ -1958,7 +1957,6 @@ describe('useForm Hook', () => {
                 );
             });
 
-            // Test passes if no error is thrown
             expect(true).toBe(true);
         });
     });
@@ -2231,6 +2229,64 @@ describe('useForm Hook', () => {
 
             expect(result.current.formState$.isDirty.get()).toBe(true);
             expect(result.current.formState$.dirtyFields.get()).toHaveProperty('name', true);
+        });
+    });
+
+    describe('Focus Management', () => {
+        it('should focus field correctly', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name');
+            const inputElement = document.createElement('input');
+            const focusMock = vi.fn();
+            inputElement.focus = focusMock;
+
+            act(() => {
+                field.ref(inputElement);
+                result.current.setFocus('name');
+            });
+
+            expect(focusMock).toHaveBeenCalled();
+        });
+
+        it('should handle setFocus with select option', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name');
+            const inputElement = document.createElement('input');
+            const focusMock = vi.fn();
+            const selectMock = vi.fn();
+            inputElement.focus = focusMock;
+            inputElement.select = selectMock;
+
+            act(() => {
+                field.ref(inputElement);
+                result.current.setFocus('name', { shouldSelect: true });
+            });
+
+            expect(focusMock).toHaveBeenCalled();
+            expect(selectMock).toHaveBeenCalled();
+        });
+
+        it('should handle setFocus on non-existent field', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+
+            act(() => {
+                result.current.setFocus('nonexistentField' as any);
+            });
+
+            expect(true).toBe(true);
+        });
+
+        it('should handle setFocus on field without focus method', () => {
+            const { result } = renderHook(() => useForm({ defaultValues }));
+            const field = result.current.register('name');
+            const divElement = document.createElement('div'); // div has no focus method
+
+            act(() => {
+                field.ref(divElement);
+                result.current.setFocus('name');
+            });
+
+            expect(true).toBe(true);
         });
     });
 });

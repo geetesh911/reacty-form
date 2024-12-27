@@ -408,7 +408,6 @@ export type UseFormGetFieldState<TFieldValues extends FieldValues> = <
     invalid: boolean;
     isDirty: boolean;
     isTouched: boolean;
-    isValidating: boolean;
     error?: FieldError;
 };
 
@@ -865,6 +864,8 @@ export interface UseFormReturn<
 > {
     formState$: Observable<FormState<TFieldValues>>;
     values$: Observable<Partial<TFieldValues>>;
+    formState: FormState<TFieldValues>;
+    values: Partial<TFieldValues>;
     handleSubmit: UseFormHandleSubmit<TFieldValues, TTransformedValues>;
     reset: UseFormReset<TFieldValues>;
     getValues: UseFormGetValues<TFieldValues>;
@@ -878,6 +879,7 @@ export interface UseFormReturn<
     resetField: UseFormResetField<TFieldValues>;
     control: Control<TFieldValues, TContext, TTransformedValues>;
     register: UseFormRegister<TFieldValues>;
+    setFocus: UseFormSetFocus<TFieldValues>;
 }
 
 export type UseFormStateProps<TFieldValues extends FieldValues> = Partial<{

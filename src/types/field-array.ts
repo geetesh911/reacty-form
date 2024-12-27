@@ -5,10 +5,8 @@ import type { FieldArrayPath, FieldArrayPathValue } from './path';
 export type UseFieldArrayProps<
     TFieldValues extends FieldValues = FieldValues,
     TFieldArrayName extends FieldArrayPath<TFieldValues> = FieldArrayPath<TFieldValues>,
-    TKeyName extends string = 'id',
 > = {
     name: TFieldArrayName;
-    keyName?: TKeyName;
     form?: UseFormReturn<TFieldValues>;
 };
 
