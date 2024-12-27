@@ -1308,7 +1308,6 @@ describe('useForm Hook', () => {
             expect(result.current.getFieldState('name')).toEqual({
                 invalid: false,
                 isDirty: true,
-                isValidating: false,
                 isTouched: false,
                 error: undefined,
             });
@@ -1327,7 +1326,6 @@ describe('useForm Hook', () => {
             expect(fieldState).toEqual({
                 invalid: true,
                 isDirty: true,
-                isValidating: false,
                 isTouched: false,
                 error: { type: 'required', message: 'Name is required' },
             });
@@ -1346,7 +1344,6 @@ describe('useForm Hook', () => {
             expect(fieldState).toEqual({
                 invalid: false,
                 isDirty: true,
-                isValidating: false,
                 isTouched: true,
                 error: undefined,
             });
