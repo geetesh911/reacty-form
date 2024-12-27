@@ -40,7 +40,6 @@ import { FieldError } from '../types';
             invalid: boolean;
             isDirty: boolean;
             isTouched: boolean;
-            isValidating: boolean;
             error?: FieldError;
         }>(getFieldState('test'));
     }
@@ -57,7 +56,6 @@ import { FieldError } from '../types';
             invalid: boolean;
             isDirty: boolean;
             isTouched: boolean;
-            isValidating: boolean;
             error?: FieldError;
         }>(getFieldState('test', formState$.get()));
     }

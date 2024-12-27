@@ -56,10 +56,9 @@ import { useFormContext } from './use-form-context.hook';
 export function useFieldArray<
     TFieldValues extends FieldValues = FieldValues,
     TFieldArrayName extends FieldArrayPath<TFieldValues> = FieldArrayPath<TFieldValues>,
-    TKeyName extends string = 'id',
 >(
-    props: UseFieldArrayProps<TFieldValues, TFieldArrayName, TKeyName>,
-): Omit<UseFieldArrayReturn<TFieldValues, TFieldArrayName, TKeyName>, 'fields'> {
+    props: UseFieldArrayProps<TFieldValues, TFieldArrayName>,
+): Omit<UseFieldArrayReturn<TFieldValues, TFieldArrayName>, 'fields'> {
     const formContext = useFormContext();
     const { name, form = formContext } = props ?? {};
 

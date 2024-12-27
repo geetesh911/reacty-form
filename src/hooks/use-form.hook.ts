@@ -25,6 +25,7 @@ import type {
     UseFormHandleSubmit,
     UseFormProps,
     UseFormReturn,
+    UseFormSetFocus,
     UseFormSetValue,
 } from '../types';
 import type {
@@ -152,6 +153,7 @@ export function useForm<
         return (resolver as Resolver<TFieldValues, TTransformedValues>)(fieldValues, undefined, {
             fields: {},
             shouldUseNativeValidation: undefined,
+            criteriaMode: _options.criteriaMode,
         }) as Promise<ResolverResult<TFieldValues>>;
     };
 
@@ -487,6 +489,20 @@ export function useForm<
         });
     };
 
+    const setFocus: UseFormSetFocus<TFieldValues> = (name, options = {}) => {
+        const field = get(fields$, name)?.get();
+        const fieldReference = field?._f;
+
+        if (fieldReference) {
+            const fieldRef = fieldReference.refs ? fieldReference.refs[0] : fieldReference.ref;
+
+            if (fieldRef.focus) {
+                fieldRef.focus();
+                options.shouldSelect && isFunction(fieldRef.select) && fieldRef.select();
+            }
+        }
+    };
+
     const getValues: UseFormGetValues<TFieldValues> = (
         fieldNames?: FieldPath<TFieldValues> | ReadonlyArray<FieldPath<TFieldValues>>,
     ) => {
@@ -689,7 +705,6 @@ export function useForm<
             invalid: !!get(errors$, name)?.get(),
             isDirty: !!get(dirtyFields$, name)?.get(),
             error: get(errors$, name)?.get() as FieldError,
-            isValidating: false, // need to implement
             isTouched: !!get(touchedFields$, name)?.get(),
         };
     };
@@ -826,12 +841,19 @@ export function useForm<
     return {
         formState$,
         values$,
+        get formState() {
+            return formState$.get() as FormState<TFieldValues>;
+        },
+        get values() {
+            return values$.get();
+        },
         register,
         handleSubmit,
         setValue,
         getValues,
         getObservable,
         peekValues,
+        setFocus,
         setError,
         clearErrors,
         trigger,
