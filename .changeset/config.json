@@ -3,7 +3,7 @@
   "changelog": [
     "@changesets/changelog-github",
     {
-      "repo": "geetesh911/per-form"
+      "repo": "geetesh911/reacty-form"
     }
   ],
   "commit": false,

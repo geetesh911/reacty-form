@@ -7,7 +7,7 @@ import type { FieldValues, UseFormReturn } from '../types';
  * This custom hook allows you to access the form context. useFormContext is intended to be used in deeply nested structures, where it would become inconvenient to pass the context as a prop. To be used with {@link FormProvider}.
  *
  * @remarks
- * [API](https://per-form.com/docs/useformcontext)
+ * [API](https://reacty-form.com/docs/useformcontext)
  *
  * @returns return all useForm methods
  *

@@ -71,7 +71,7 @@ const defaultOptions = {
  * Custom hook to manage the entire form.
  *
  * @remarks
- * [API](https://per-form.com/docs/useform)
+ * [API](https://reacty-form.com/docs/useform)
  *
  * @param props - form configuration and validation parameters.
  *

@@ -21,7 +21,7 @@ import { useFormContext } from './use-form-context.hook';
  * Custom hook to work with controlled component, this function provide you with both form and field level state. Re-render is isolated at the hook level.
  *
  * @remarks
- * [API](https://per-form.com/docs/usecontroller)
+ * [API](https://reacty-form.com/docs/usecontroller)
  *
  * @param props - the path name to the form field value, and validation rules.
  *

@@ -6,7 +6,7 @@ import { useFormContext } from './use-form-context.hook';
  * This custom hook allows you to subscribe to each form state, and isolate the re-render at the custom hook level. It has its scope in terms of form state subscription, so it would not affect other useFormState and useForm. Using this hook can reduce the re-render impact on large and complex form application.
  *
  * @remarks
- * [API](https://per-form.com/docs/useformstate) • [Demo](https://codesandbox.io/s/useformstate-75xly)
+ * [API](https://reacty-form.com/docs/useformstate) • [Demo](https://codesandbox.io/s/useformstate-75xly)
  *
  * @param props - include options on specify fields to subscribe. {@link UseFormStateReturn}
  *

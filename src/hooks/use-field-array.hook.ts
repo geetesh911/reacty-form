@@ -17,10 +17,10 @@ import { cloneObject, convertToArrayPayload, get } from '../utils';
 import { useFormContext } from './use-form-context.hook';
 
 /**
- * A custom hook that exposes convenient methods to perform operations with a list of dynamic inputs that need to be appended, updated, removed etc. • [Demo](https://codesandbox.io/s/per-form-usefieldarray-ssugn) • [Video](https://youtu.be/4MrbfGSFY2A)
+ * A custom hook that exposes convenient methods to perform operations with a list of dynamic inputs that need to be appended, updated, removed etc. • [Demo](https://codesandbox.io/s/reacty-form-usefieldarray-ssugn) • [Video](https://youtu.be/4MrbfGSFY2A)
  *
  * @remarks
- * [API](https://per-form.com/docs/usefieldarray)
+ * [API](https://reacty-form.com/docs/usefieldarray)
  *
  * @param props - useFieldArray props
  *

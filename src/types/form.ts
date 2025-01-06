@@ -182,7 +182,7 @@ export type UseFormRegisterReturn<TFieldName extends InternalFieldName = Interna
  * Register field into hook form with or without the actual DOM ref. You can invoke register anywhere in the component including at `useEffect`.
  *
  * @remarks
- * [API](https://per-form.com/docs/useform/register)
+ * [API](https://reacty-form.com/docs/useform/register)
  *
  * @param name - the path name to the form field value, name is required and unique
  * @param options - register options include validation, disabled, unregister, value as and dependent validation
@@ -226,7 +226,7 @@ export type SetFocusOptions = Partial<{
  * Set focus on a registered field. You can start to invoke this method after all fields are mounted to the DOM.
  *
  * @remarks
- * [API](https://per-form.com/docs/useform/setfocus)
+ * [API](https://reacty-form.com/docs/useform/setfocus)
  *
  * @param name - the path name to the form field value.
  * @param options - input focus behavior options
@@ -252,7 +252,7 @@ export type UseFormGetValues<TFieldValues extends FieldValues> = {
      * Get the entire form values when no argument is supplied to this function.
      *
      * @remarks
-     * [API](https://per-form.com/docs/useform/getvalues)
+     * [API](https://reacty-form.com/docs/useform/getvalues)
      *
      * @returns form values
      *
@@ -270,7 +270,7 @@ export type UseFormGetValues<TFieldValues extends FieldValues> = {
      * Get a single field value.
      *
      * @remarks
-     * [API](https://per-form.com/docs/useform/getvalues)
+     * [API](https://reacty-form.com/docs/useform/getvalues)
      *
      * @param name - the path name to the form field value.
      *
@@ -292,7 +292,7 @@ export type UseFormGetValues<TFieldValues extends FieldValues> = {
      * Get an array of field values.
      *
      * @remarks
-     * [API](https://per-form.com/docs/useform/getvalues)
+     * [API](https://reacty-form.com/docs/useform/getvalues)
      *
      * @param names - an array of field names
      *
@@ -317,7 +317,7 @@ export type UseFormGetObservable<TFieldValues extends FieldValues> = {
      * Get the entire form values when no argument is supplied to this function.
      *
      * @remarks
-     * [API](https://per-form.com/docs/useform/getvalues)
+     * [API](https://reacty-form.com/docs/useform/getvalues)
      *
      * @returns form values
      *
@@ -335,7 +335,7 @@ export type UseFormGetObservable<TFieldValues extends FieldValues> = {
      * Get a single field value.
      *
      * @remarks
-     * [API](https://per-form.com/docs/useform/getvalues)
+     * [API](https://reacty-form.com/docs/useform/getvalues)
      *
      * @param name - the path name to the form field value.
      *
@@ -355,7 +355,7 @@ export type UseFormGetObservable<TFieldValues extends FieldValues> = {
      * Get an array of field values.
      *
      * @remarks
-     * [API](https://per-form.com/docs/useform/getvalues)
+     * [API](https://reacty-form.com/docs/useform/getvalues)
      *
      * @param names - an array of field names
      *
@@ -379,7 +379,7 @@ export type UseFormGetObservable<TFieldValues extends FieldValues> = {
  * This method will return individual field states. It will be useful when you are trying to retrieve the nested value field state in a typesafe approach.
  *
  * @remarks
- * [API](https://per-form.com/docs/useform/getfieldstate)
+ * [API](https://reacty-form.com/docs/useform/getfieldstate)
  *
  * @param name - the path name to the form field value.
  *
@@ -416,7 +416,7 @@ export type UseFormWatch<TFieldValues extends FieldValues> = {
      * Watch and subscribe to the entire form update/change based on onChange and re-render at the useForm.
      *
      * @remarks
-     * [API](https://per-form.com/docs/useform/watch)
+     * [API](https://reacty-form.com/docs/useform/watch)
      *
      * @returns return the entire form values
      *
@@ -430,7 +430,7 @@ export type UseFormWatch<TFieldValues extends FieldValues> = {
      * Watch and subscribe to an array of fields used outside of render.
      *
      * @remarks
-     * [API](https://per-form.com/docs/useform/watch)
+     * [API](https://reacty-form.com/docs/useform/watch)
      *
      * @param names - an array of field names
      * @param defaultValue - defaultValues for the entire form
@@ -450,7 +450,7 @@ export type UseFormWatch<TFieldValues extends FieldValues> = {
      * Watch and subscribe to a single field used outside of render.
      *
      * @remarks
-     * [API](https://per-form.com/docs/useform/watch)
+     * [API](https://reacty-form.com/docs/useform/watch)
      *
      * @param name - the path name to the form field value.
      * @param defaultValue - defaultValues for the entire form
@@ -470,7 +470,7 @@ export type UseFormWatch<TFieldValues extends FieldValues> = {
      * Subscribe to field update/change without trigger re-render
      *
      * @remarks
-     * [API](https://per-form.com/docs/useform/watch)
+     * [API](https://reacty-form.com/docs/useform/watch)
      *
      * @param callback - call back function to subscribe all fields change and return unsubscribe function
      * @param defaultValues - defaultValues for the entire form
@@ -497,7 +497,7 @@ export type UseFormWatch<TFieldValues extends FieldValues> = {
  * Trigger field or form validation
  *
  * @remarks
- * [API](https://per-form.com/docs/useform/trigger)
+ * [API](https://reacty-form.com/docs/useform/trigger)
  *
  * @param name - provide empty argument will trigger the entire form validation, an array of field names will validate an array of fields, and a single field name will only trigger that field's validation.
  * @param options - should focus on the error field
@@ -526,7 +526,7 @@ export type UseFormTrigger<TFieldValues extends FieldValues> = (
  * Clear the entire form errors.
  *
  * @remarks
- * [API](https://per-form.com/docs/useform/clearerrors)
+ * [API](https://reacty-form.com/docs/useform/clearerrors)
  *
  * @param name - the path name to the form field value.
  *
@@ -551,7 +551,7 @@ export type UseFormClearErrors<TFieldValues extends FieldValues> = (
  * Set a single field value, or a group of fields value.
  *
  * @remarks
- * [API](https://per-form.com/docs/useform/setvalue)
+ * [API](https://reacty-form.com/docs/useform/setvalue)
  *
  * @param name - the path name to the form field value.
  * @param value - field value
@@ -588,7 +588,7 @@ export type UseFormSetValue<TFieldValues extends FieldValues> = <
  * Set an error for the field. When set an error which is not associated to a field then manual `clearErrors` invoke is required.
  *
  * @remarks
- * [API](https://per-form.com/docs/useform/seterror)
+ * [API](https://reacty-form.com/docs/useform/seterror)
  *
  * @param name - the path name to the form field value.
  * @param error - an error object which contains type and optional message
@@ -617,7 +617,7 @@ export type UseFormSetError<TFieldValues extends FieldValues> = (
  * Unregister a field reference and remove its value.
  *
  * @remarks
- * [API](https://per-form.com/docs/useform/unregister)
+ * [API](https://reacty-form.com/docs/useform/unregister)
  *
  * @param name - the path name to the form field value.
  * @param options - keep form state options
@@ -643,7 +643,7 @@ export type UseFormUnregister<TFieldValues extends FieldValues> = (
  * Validate the entire form. Handle submit and error callback.
  *
  * @remarks
- * [API](https://per-form.com/docs/useform/handlesubmit)
+ * [API](https://reacty-form.com/docs/useform/handlesubmit)
  *
  * @param onValid - callback function invoked after form pass validation
  * @param onInvalid - callback function invoked when form failed validation
@@ -674,7 +674,7 @@ export type UseFormHandleSubmit<
  * Reset a field state and reference.
  *
  * @remarks
- * [API](https://per-form.com/docs/useform/resetfield)
+ * [API](https://reacty-form.com/docs/useform/resetfield)
  *
  * @param name - the path name to the form field value.
  * @param options - keep form state options
@@ -703,7 +703,7 @@ type ResetAction<TFieldValues> = (formValues: TFieldValues) => TFieldValues;
  * Reset at the entire form state.
  *
  * @remarks
- * [API](https://per-form.com/docs/useform/reset)
+ * [API](https://reacty-form.com/docs/useform/reset)
  *
  * @param values - the entire form values to be reset
  * @param keepStateOptions - keep form state options

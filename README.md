@@ -1,24 +1,24 @@
-# Per-form
+# Reacty-form
 
-Per-Form is a React form management library that provides a set of hooks and components (very similar to `react-hook-form`) to manage form state efficiently. It leverages the power of [Legend-State](https://github.com/legendapp/legend-state) for state management, offering fine-grained reactivity and performance optimizations.
+Reacty-form is a React form management library that provides a set of hooks and components (very similar to `react-hook-form`) to manage form state efficiently. It leverages the power of [Legend-State](https://github.com/legendapp/legend-state) for state management, offering fine-grained reactivity and performance optimizations.
 
 ## **Installation**
 
 ```bash
-npm install per-form
+npm install reacty-form
 # or
-yarn add per-form
+yarn add reacty-form
 # or
-pnpm add per-form
+pnpm add reacty-form
 ```
 
 ## **Getting Started**
 
-Here's a basic example of using Per-Form in a React application:
+Here's a basic example of using Reacty-form in a React application:
 
 ```tsx
 import React from 'react';
-import { Controller, useForm } from 'per-form';
+import { Controller, useForm } from 'reacty-form';
 
 function App() {
     const { register, formState: { errors } } = useForm();
@@ -74,8 +74,7 @@ export default App;
     | onSubmit | string | Validation is triggered on the `submit` event, and inputs attach `onChange` event listeners to re-validate themselves. |
     | onBlur | string | Validation is triggered on the `blur` event. |
     | onChange | string | Validation is triggered on the `change`event for each input, leading to multiple re-renders. Warning: this often comes with a significant impact on performance. |
-    | onTouched | string | Validation is initially triggered on the first `blur` event. After that, it is triggered on every `change` event.
-    **Note:** when using with `Controller`, make sure to wire up `onBlur` with the `render` prop. |
+    | onTouched | string | Validation is initially triggered on the first `blur` event. After that, it is triggered on every `change` event.<br><br>    **Note:** when using with `Controller`, make sure to wire up `onBlur` with the `render` prop. |
     | all | string | Validation is triggered on both `blur` and `change` events. |
 
 - ### **`reValidateMode: onChange | onBlur | onSubmit = 'onChange'`**
@@ -220,7 +219,7 @@ export default App;
 
     ```jsx
     import React from 'react';
-    import { useForm } from 'per-form';
+    import { useForm } from 'reacty-form';
     import { yupResolver } from '@hookform/resolvers/yup';
     import * as yup from "yup";
 
@@ -309,7 +308,7 @@ The following table contains information about properties which `useController`
 
 ```jsx
 import { TextField } from "@material-ui/core";
-import { useController, useForm } from "per-form";
+import { useController, useForm } from "reacty-form";
 
 function Input({ form, name }) {
   const {
@@ -377,7 +376,7 @@ function Input({ form, name }) {
 
 ## **`Controller`**
 
-Per-Form embraces uncontrolled components and native inputs, however it's hard to avoid working with external controlled component such as [React-Select](https://github.com/JedWatson/react-select), [AntD](https://github.com/ant-design/ant-design) and [MUI](https://mui.com/). This wrapper component will make it easier for you to work with them.
+Reacty-form embraces uncontrolled components and native inputs, however it's hard to avoid working with external controlled component such as [React-Select](https://github.com/JedWatson/react-select), [AntD](https://github.com/ant-design/ant-design) and [MUI](https://mui.com/). This wrapper component will make it easier for you to work with them.
 
 ### Props
 
@@ -400,7 +399,7 @@ The following table contains information about the arguments for `Controller`.
 ```jsx
 import ReactDatePicker from "react-datepicker"
 import { TextField } from "@material-ui/core"
-import { useForm, Controller } from "per-form"
+import { useForm, Controller } from "reacty-form"
 
 type FormValues = {
   ReactDatepicker: string
@@ -455,7 +454,7 @@ You need to wrap your form with the `FormProvider` component for `useFormCont
 
 ```tsx
 import React from "react"
-import { useForm, FormProvider, useFormContext } from "per-form"
+import { useForm, FormProvider, useFormContext } from "reacty-form"
 
 export default function App() {
   const form = useForm()
@@ -505,7 +504,7 @@ This following table applied to `FormProvider`, `useFormContext` accepts no a
 ```tsx
 import React from "react"
 
-import { useForm, FormProvider, useFormContext } from "per-form"
+import { useForm, FormProvider, useFormContext } from "reacty-form"
 
 export default function App() {
   const form = useForm()
@@ -591,7 +590,7 @@ This custom hook returns the current state of the form.
 
 ```tsx
 import * as React from "react";
-import { useForm, useFormState } from "per-form";
+import { useForm, useFormState } from "reacty-form";
 
 function Child({ form }) {
   const { dirtyFields } = useFormState({

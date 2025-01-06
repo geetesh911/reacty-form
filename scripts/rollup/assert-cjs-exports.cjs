@@ -11,7 +11,7 @@ const assert = require('node:assert');
 const fs = require('node:fs');
 
 (async () => {
-    const exported = await import('per-form');
+    const exported = await import('reacty-form');
     /**
      * When this fails, find the update one-liner in ./assert-esm-exports.mjs
      */

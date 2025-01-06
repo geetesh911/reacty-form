@@ -1,5 +1,5 @@
 {
-  "name": "per-form",
+  "name": "reacty-form",
   "version": "0.1.0",
   "description": "Performant, flexible and extensible forms library for React Hooks using Legend State",
   "type": "module",
@@ -20,7 +20,7 @@
       "require": "./dist/index.cjs.js"
     }
   },
-  "repository": "https://github.com/geetesh911/per-form.git",
+  "repository": "https://github.com/geetesh911/reacty-form.git",
   "keywords": [
     "form",
     "react",
@@ -38,9 +38,9 @@
   "author": "Geetesh Laddha <geetesh911@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/geetesh911/per-form/issues"
+    "url": "https://github.com/geetesh911/reacty-form/issues"
   },
-  "homepage": "https://github.com/geetesh911/per-form#readme",
+  "homepage": "https://github.com/geetesh911/reacty-form#readme",
   "scripts": {
     "preinstall": "npx only-allow pnpm",
     "postinstall": "simple-git-hooks",

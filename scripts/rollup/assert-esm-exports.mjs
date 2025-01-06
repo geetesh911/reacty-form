@@ -8,13 +8,13 @@ import url from 'node:url';
  *
  * @see https://nodejs.org/docs/latest/api/packages.html#packages_determining_module_system
  */
-import * as exported from 'per-form';
+import * as exported from 'reacty-form';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
 /**
  * A shell one-liner to update this array when neccessary (run from root of repo):
- *  node -e "import('per-form').then((mod) => console.log(JSON.stringify(Object.keys(mod), null, 2)))" > scripts/rollup/all-exports.json
+ *  node -e "import('reacty-form').then((mod) => console.log(JSON.stringify(Object.keys(mod), null, 2)))" > scripts/rollup/all-exports.json
  */
 const expected = JSON.parse(
     fs.readFileSync(path.resolve(__dirname, './all-exports.json'), 'utf-8'),

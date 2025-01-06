@@ -43,7 +43,7 @@ export type FieldArrayMethodProps = {
  * Swap field array by supplying from and to index
  *
  * @remarks
- * [API](https://per-form.com/docs/usefieldarray)
+ * [API](https://reacty-form.com/docs/usefieldarray)
  *
  * @param indexA - from index
  * @param indexB - to index
@@ -59,7 +59,7 @@ export type UseFieldArraySwap = (indexA: number, indexB: number) => void;
  * Move field array by supplying from and to index
  *
  * @remarks
- * [API](https://per-form.com/docs/usefieldarray)
+ * [API](https://reacty-form.com/docs/usefieldarray)
  *
  * @param indexA - from index
  * @param indexB - to index
@@ -75,7 +75,7 @@ export type UseFieldArrayMove = (indexA: number, indexB: number) => void;
  * Prepend field/fields to the start of the fields and optionally focus. The input value will be registered during this action.
  *
  * @remarks
- * [API](https://per-form.com/docs/usefieldarray)
+ * [API](https://reacty-form.com/docs/usefieldarray)
  *
  * @param value - prepend items or items
  * @param options - focus options
@@ -104,7 +104,7 @@ export type UseFieldArrayPrepend<
  * Append field/fields to the end of your fields and focus. The input value will be registered during this action.
  *
  * @remarks
- * [API](https://per-form.com/docs/usefieldarray)
+ * [API](https://reacty-form.com/docs/usefieldarray)
  *
  * @param value - append items or items.
  * @param options - focus options
@@ -133,7 +133,7 @@ export type UseFieldArrayAppend<
  * Remove field/fields at particular position.
  *
  * @remarks
- * [API](https://per-form.com/docs/usefieldarray)
+ * [API](https://reacty-form.com/docs/usefieldarray)
  *
  * @param index - index to remove at, or remove all when no index provided.
  *
@@ -154,7 +154,7 @@ export type UseFieldArrayRemove = (index?: number | number[]) => void;
  * Insert field/fields at particular position and focus.
  *
  * @remarks
- * [API](https://per-form.com/docs/usefieldarray)
+ * [API](https://reacty-form.com/docs/usefieldarray)
  *
  * @param index - insert position
  * @param value - insert field or fields
@@ -185,7 +185,7 @@ export type UseFieldArrayInsert<
  * Update field/fields at particular position.
  *
  * @remarks
- * [API](https://per-form.com/docs/usefieldarray)
+ * [API](https://reacty-form.com/docs/usefieldarray)
  *
  * @param index - insert position
  * @param value - insert field or fields
@@ -210,7 +210,7 @@ export type UseFieldArrayUpdate<
  * Replace the entire field array values.
  *
  * @remarks
- * [API](https://per-form.com/docs/usefieldarray)
+ * [API](https://reacty-form.com/docs/usefieldarray)
  *
  * @param value - the entire field values.
  *
