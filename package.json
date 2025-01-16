@@ -113,9 +113,5 @@
     "commitizen": {
       "path": "node_modules/cz-git"
     }
-  },
-  "peerDependencies": {
-    "@legendapp/state": "beta",
-    "react": "^16.8.0 || ^17 || ^18 || ^19"
   }
 }
