@@ -1,7 +1,3 @@
-import assert from 'node:assert';
-import fs from 'node:fs';
-import path from 'node:path';
-import url from 'node:url';
 /**
  * This file, when executed in the postbuild lifecycle, ensures that
  * the ESM output is valid ESM according to the package.json spec.
@@ -9,6 +5,10 @@ import url from 'node:url';
  * @see https://nodejs.org/docs/latest/api/packages.html#packages_determining_module_system
  */
 import * as exported from 'reacty-form';
+import assert from 'node:assert';
+import fs from 'node:fs';
+import path from 'node:path';
+import url from 'node:url';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 

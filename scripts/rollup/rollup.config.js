@@ -3,7 +3,7 @@ import pkg from '../../package.json';
 import { createRollupConfig } from './createRollupConfig';
 
 const name = 'index';
-const external = ['@legendapp/state', '@legendapp/state/react'];
+const external = [];
 const options = [
     {
         name,
