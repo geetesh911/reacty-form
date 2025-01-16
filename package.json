@@ -115,7 +115,7 @@
     }
   },
   "peerDependencies": {
-    "@legendapp/state": "^3",
+    "@legendapp/state": "beta",
     "react": "^16.8.0 || ^17 || ^18 || ^19"
   }
 }
