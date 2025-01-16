@@ -1,5 +1,11 @@
 # reacty-form
 
+## 0.1.1
+
+### Patch Changes
+
+- [#3](https://github.com/geetesh911/reacty-form/pull/3) [`4898dba`](https://github.com/geetesh911/reacty-form/commit/4898dba81e902673e63ff0cce8ee01262ec10b28) Thanks [@geetesh911](https://github.com/geetesh911)! - Updated legend state version to beta in peer dependencies
+
 ## 0.1.0
 
 ### Minor Changes
