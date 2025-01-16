@@ -1,5 +1,11 @@
 # reacty-form
 
+## 0.1.2
+
+### Patch Changes
+
+- [#5](https://github.com/geetesh911/reacty-form/pull/5) [`2690247`](https://github.com/geetesh911/reacty-form/commit/269024786220f3d4ee17e5d1008a5ee8974af5ad) Thanks [@geetesh911](https://github.com/geetesh911)! - Removed peer dependencies
+
 ## 0.1.1
 
 ### Patch Changes
