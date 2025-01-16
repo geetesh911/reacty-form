@@ -113,5 +113,8 @@
     "commitizen": {
       "path": "node_modules/cz-git"
     }
+  },
+  "peerDependencies": {
+    "react": "^16.8.0 || ^17 || ^18 || ^19"
   }
 }
